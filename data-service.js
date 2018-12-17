@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 
@@ -30,12 +33,60 @@ module.exports.initialize=function(){
             reject(err);
         });
         db.once('open',()=>{
-            Meals=mongoose.model('Meals',mealSchema);
-            Orders=mongoose.model('Orders',orderSchema);
-            Users=mongoose.model('Users',userSchema);
+            Meals=db.model('Meals',mealSchema);
+            Orders=db.model('Orders',orderSchema);
+            Users=db.model('Users',userSchema);
             userSchema.add({orders:[orderSchema]});
             resolve();
         });
+
     });
 };
 
+module.exports.addmeal = function (newmeal) {
+    let meal=new Meals(newmeal);
+    return new Promise((resolve, reject) => {
+        meal.save((err, data) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            else {
+                resolve(data.name + " saved ");
+            }
+        })
+    });
+}
+
+module.exports.getAllMeal=function(){
+    return new Promise((resolve, reject) => {
+        Meals.find().exec().then((data)=>{
+            resolve(data);
+        }).catch((err)=>{
+            reject(err);
+        });
+    });
+}
+
+module.exports.deleteMeal = function (myname) {
+    return new Promise((resolve, reject) => {
+        Meals.findOne({name:myname}).exec().then((meal)=>{
+            Meals.deleteOne({ name: meal.name }).exec().then(() => {
+                picPath=path.join("./public/images/uploaded",meal.picture);
+                //console.log(picPath);
+                fs.unlink(picPath,(err) => {
+                    if (err) reject(err) ;
+                     resolve(meal.name + 'deleted');
+                  });        
+            }).catch((err)=>{
+                reject(err);
+            })
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
+
+module.exports.updateMeal=function(){
+    
+}

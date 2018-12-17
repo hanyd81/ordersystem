@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-10">
+        <h2>Add Meal</h2>
+        <br>
+        <form method="post" action="/meals/add" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-4 col-sm-10 ">
+                    <div class="form-group">
+                        <label for="firstName">Meal Picture:</label>
+                        <input class="form-control" id="picture" name="picture" type="file" />
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-10">
+                    <div class="form-group">
+                        <label for="firstName">Name:</label>
+                        <input class="form-control" id="name" name="name" type="text" />
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-10">
+                    <div class="form-group">
+                        <label for="firstName">price:</label>
+                        <input class="form-control" id="price" name="price" type="text" />
+                    </div>
+                </div>
+            </div>
+            <hr >
+            <input type="submit" class="btn btn-primary pull-right" value="Add meal" /><br /><br /><br />
+        </form>
+    </div> 
+</div>
+<div class='row'>
+ <div class="col-md-10">
+     {{#if message}}
+     <h2>{{message}}</h2>
+     {{/if}}
+ </div>
+ </div>

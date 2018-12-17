@@ -1,12 +1,18 @@
 const express=require ("express");
 const path = require("path");
-const fs = require("fs");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const exphbs = require("express-handlebars");
 const clientSessions = require("client-sessions");
 app = express();
+//-------------------test index-----------
+var Handlebars = require('handlebars');
 
+Handlebars.registerHelper("inc", function(value, options)
+{
+    return parseInt(value) + 1;
+});
+//---------------------------------------
 const dataService=require("./data-service.js");
 
 const HTTP_PORT=process.env.PORT || 8050;
@@ -52,25 +58,24 @@ app.use((req,res,next)=>{
     next();
 })
 
-app.engine('.hbs',exphbs({
+app.engine('.hbs', exphbs({
     extname: '.hbs',
     defaultLayout: 'main',
-    helpers:{
-        navLink: function(url,options){
-            return '<li'+((url==app.locals.activeRoute)? ' class="active"':"") +
-                '><a href="'+url+'">' +options.fn(this)+'</a></li>' ;
+    helpers: {
+        navLink: function (url, options) {
+            return '<li' + ((url == app.locals.activeRoute) ? ' class="active"' : "") +
+                '><a href="' + url + '">' + options.fn(this) + '</a></li>';
         },
-        equal:function(lvalue,rvalue,options){
-            if(arguments.length<3)
-            throw new Error ("Handlebars Helper equal needs 2 parameters");
-            if(lvalue!=rvalue){
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
                 return options.inverse(this);
-            }else{
+            } else {
                 return options.fn(this);
             }
-        }
-    }
-}));
+        } }
+    }));
 
 app.set("view engine", '.hbs');
 
@@ -97,9 +102,45 @@ app.get("/logout", (req,res)=>{
     res.redirect("/");
 })
 
+app.get("/meals", (req,res)=>{
+    dataService.getAllMeal().then((data)=>{
+       res.render("meals",{mealData:data});  
+    }).catch((err)=>{
+        res.render("meals",{message:err}); 
+    })
+   
+})
 
+app.get("/addmeal",(req,res)=>{
+    res.render("addmeal");
+});
 
+app.get("/meals/delete/:name", (req,res)=>{
+    dataService.deleteMeal(req.params.name).then(()=>{
+        res.redirect("/meals");
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("Unable to Remove meal / meal not found");
+    })
+})
+//-------------------POST route---------------------
 
+app.post("/meals/add", upload.single("picture"), (req, res) => {
+
+    let meal = {
+        name: req.body.name,
+        price: parseFloat(req.body.price),
+        picture: req.file.filename
+    };
+    dataService.addmeal(meal).then(() => {
+        res.redirect("/meals");
+    }).catch((err) => {
+        res.render("addmeal", { message: err });
+    });
+
+})
+
+//------------------------- 404-----------------------
 app.use((req, res) => {
     res.status(404).send("Page Not Found");
 });

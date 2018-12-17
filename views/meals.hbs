@@ -1,0 +1,30 @@
+<div class="row">
+    <h1>All Orders</h1>
+</div>
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Picture</th>
+      <th scope="col">Meal</th>
+      <th scope="col">Price</th> 
+      <th scope="col"></th> 
+    </tr>
+  </thead>
+  <tbody>
+      {{#each mealData}}
+    <tr>
+      <th scope="row">{{inc @index }}</th>
+      <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
+      class="rounded img-thumbnail " style="max-width: 200px; height:auto" /></td>
+      <td>{{name}}</td>
+      <td>{{price}}</td>
+      <td><a href="meals/delete/{{name}}" class="btn btn-danger" >delete</a></td>
+    </tr>
+    {{else}}
+    <tr>
+        <td class="text-center" colspan="5"><strong font="2em">No Meal in Menu</strong></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
