@@ -1,0 +1,116 @@
+const express=require ("express");
+const path = require("path");
+const fs = require("fs");
+const bodyParser = require("body-parser");
+const multer = require("multer");
+const exphbs = require("express-handlebars");
+const clientSessions = require("client-sessions");
+app = express();
+
+const dataService=require("./data-service.js");
+
+const HTTP_PORT=process.env.PORT || 8050;
+
+const storage = multer.diskStorage({
+    destination: "./public/images/uploaded",
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload = multer({ storage: storage });
+
+app.use(express.static('./public'));
+
+app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(clientSessions ({
+    cookieName:"session",
+    secret: "happywokisanicechinesefoodresrunt",
+    duration: 2*60*1000,
+    activeDuration: 1*60*1000
+}));
+
+app.use((req,res,next)=>{
+    res.locals.session=req.session;
+    next();
+})
+
+function ensureLogin(req,res,next){
+    if (!req.session.user){
+        res.redirect("/login");
+    }else {
+        next();
+    }
+}
+//----------------------active nav bar------------------------
+app.use((req,res,next)=>{
+    let route=req.baseUrl+req.path;
+    //console.log("req.baseUrl  "+req.baseUrl);
+    //console.log("req.path "+req.path);
+    app.locals.activeRoute=(route=="/")?"/":route.replace(/\/$/,"");
+    next();
+})
+
+app.engine('.hbs',exphbs({
+    extname: '.hbs',
+    defaultLayout: 'main',
+    helpers:{
+        navLink: function(url,options){
+            return '<li'+((url==app.locals.activeRoute)? ' class="active"':"") +
+                '><a href="'+url+'">' +options.fn(this)+'</a></li>' ;
+        },
+        equal:function(lvalue,rvalue,options){
+            if(arguments.length<3)
+            throw new Error ("Handlebars Helper equal needs 2 parameters");
+            if(lvalue!=rvalue){
+                return options.inverse(this);
+            }else{
+                return options.fn(this);
+            }
+        }
+    }
+}));
+
+app.set("view engine", '.hbs');
+
+
+
+
+
+//--------------GET---routes-----------------------
+
+app.get("/", (req,res)=>{
+    res.render("home");
+});
+
+app.get("/login", (req,res)=>{
+    res.render("login");
+})
+
+app.get("/register", (req,res)=>{
+    res.render("register");
+})
+
+app.get("/logout", (req,res)=>{
+    req.session.reset();
+    res.redirect("/");
+})
+
+
+
+
+app.use((req, res) => {
+    res.status(404).send("Page Not Found");
+});
+
+
+dataService.initialize()
+.then(() => {
+    app.listen(HTTP_PORT, function () {
+        console.log("Express http server listening on " + HTTP_PORT);
+
+    });
+}).catch((err) => {
+    console.log("unable to start server: "+ err);
+})

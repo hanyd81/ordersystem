@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1">
+        <h2><span style="font-size: 0.8em" class="glyphicon glyphicon-pencil" ></span> &nbsp;Register</h2>
+        <hr>
+
+        {{#if errorMessage}}
+        <div class="alert alert-danger"> <strong>Error:</strong> {{errorMessage}}</div>
+        {{/if}}
+
+        {{#if successMessage}}
+        <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div>
+        <a class="btn btn-success pull-right" href="/login">&nbsp;&nbsp;&nbsp;Proceed to Log in&nbsp;&nbsp;&nbsp;</a>
+        <br><br><br>
+        {{else}}
+        <form method="post" action="/register">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="form-group">
+                        <label>table Number</label>
+                        <input class="form-control" id="number" name="number" type="number" placeholder="table number" min="1"
+                            required    />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input class="form-control" id="password" name="password" type="password" placeholder="Password"
+                            required />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input class="form-control" id="password2" name="password2" type="password" placeholder="Confirm Password"
+                            required />
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary pull-right" value="Register" />
+        </form>
+        {{/if}}
+    </div>
+</div>
