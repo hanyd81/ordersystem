@@ -5,7 +5,7 @@ const multer = require("multer");
 const exphbs = require("express-handlebars");
 const clientSessions = require("client-sessions");
 app = express();
-//-------------------test index-----------
+//------------------- index start from 1-----------
 var Handlebars = require('handlebars');
 
 Handlebars.registerHelper("inc", function(value, options)
@@ -123,6 +123,20 @@ app.get("/meals/delete/:name", (req,res)=>{
         res.status(500).send("Unable to Remove meal / meal not found");
     })
 })
+
+app.get("/meal/:mealId", (req, res) => {
+    dataService.getMealById(req.params.mealId).then((data) => {
+        if(data){
+            res.render("changemeal", { meal: data }); 
+        }else{
+            res.status(404).send(" empty meal");
+        }
+        
+    }).catch((err) => {
+        res.status(404).send("Meal Not Found");
+    })
+});
+
 //-------------------POST route---------------------
 
 app.post("/meals/add", upload.single("picture"), (req, res) => {
@@ -139,6 +153,31 @@ app.post("/meals/add", upload.single("picture"), (req, res) => {
     });
 
 })
+
+app.post("/meal/updatePic", upload.single("newPicture"), (req, res) => {
+    dataService.getMealById(req.body.mealId).then((meal) => {
+        if(req.body.oldPic!=meal.picture){
+            picPath = path.join("./public/images/uploaded", req.body.oldPic);
+                //console.log(picPath);
+                fs.unlink(picPath, (err) => {
+                    if (err) console.log(err);
+                });
+        }
+        res.render("changemeal", { meal: meal, newPic: req.file.filename });
+    });
+
+})
+
+
+app.post("/meal/update", (req,res)=>{
+    dataService.updateMeal(req.body).then(()=>{
+        res.redirect("/meals");
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("Unable to process request");
+    });
+})
+
 
 //------------------------- 404-----------------------
 app.use((req, res) => {

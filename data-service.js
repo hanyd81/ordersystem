@@ -68,17 +68,16 @@ module.exports.getAllMeal=function(){
     });
 }
 
-module.exports.deleteMeal = function (myname) {
+module.exports.deleteMeal = function (myId) {
     return new Promise((resolve, reject) => {
-        Meals.findOne({name:myname}).exec().then((meal)=>{
-            Meals.deleteOne({ name: meal.name }).exec().then(() => {
-                picPath=path.join("./public/images/uploaded",meal.picture);
-                //console.log(picPath);
-                fs.unlink(picPath,(err) => {
-                    if (err) reject(err) ;
-                     resolve(meal.name + 'deleted');
-                  });        
-            }).catch((err)=>{
+        Meals.findById(myId).exec().then((meal) => {
+            Meals.deleteOne({ _id: myId }).exec().then(() => {
+                picPath = path.join("./public/images/uploaded", meal.picture);
+                fs.unlink(picPath, (err) => {
+                    if (err) console.log(err);
+                    resolve(meal.name + 'deleted');
+                });
+            }).catch((err) => {
                 reject(err);
             })
         }).catch((err) => {
@@ -87,6 +86,36 @@ module.exports.deleteMeal = function (myname) {
     });
 }
 
-module.exports.updateMeal=function(){
-    
+module.exports.updateMeal = function (body) {
+    return new Promise((resolve, reject) => {
+        Meals.findOne({ _id: body.mealId }).exec().then((oldmeal) => {
+            Meals.updateOne({ _id: body.mealId },
+                { $set: { name: body.mealName, price: body.mealPrice, picture: body.mealPic } }
+            ).then(() => {
+                if (oldmeal.picture != body.mealPic) {
+                    picPath = path.join("./public/images/uploaded", oldmeal.picture);
+                    console.log(picPath);
+                    fs.unlink(picPath, (err) => {
+                        if (err) console.log(err);
+                    });
+                }
+                resolve(body.mealName + 'updated');
+            }).catch((err)=>{
+                reject(err);
+            });
+        }).catch((err) => {
+            reject(err);
+        })
+    })
+}
+
+module.exports.getMealById = function (myId) {
+    return new Promise((resolve, reject) => {
+        Meals.findOne({ _id: myId }).exec().then((meal) => {
+            resolve(meal);
+        }).catch((err) => {
+            console.log(err);
+            reject(err);
+        });
+    })
 }
