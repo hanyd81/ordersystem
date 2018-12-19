@@ -137,7 +137,31 @@ app.get("/meal/:mealId", (req, res) => {
     })
 });
 
+app.get("/tableStart",(req,res)=>{
+    res.render("tableStart");
+})
+
+
 //-------------------POST route---------------------
+app.post("/register", (req, res) => {
+
+    dataService.registerUser(req.body).then(() => {
+        res.render("register", { successMessage: "Table created" });
+    }).catch((err)=>{
+        res.render("register", {errorMessage: err, userName: req.body.userName});
+    });
+});
+
+app.post("/login",(req,res)=>{
+    dataService.checkUser(req.body).then((user) => {
+        req.session.user = {
+        tableNumber:user.number
+        }
+        res.redirect('/tableStart');
+        }).catch((err)=>{
+            res.render("login", {errorMessage: err, tableNumber: req.body.number});
+        });
+});
 
 app.post("/meals/add", upload.single("picture"), (req, res) => {
 
@@ -168,7 +192,6 @@ app.post("/meal/updatePic", upload.single("newPicture"), (req, res) => {
 
 })
 
-
 app.post("/meal/update", (req,res)=>{
     dataService.updateMeal(req.body).then(()=>{
         res.redirect("/meals");
@@ -189,7 +212,6 @@ dataService.initialize()
 .then(() => {
     app.listen(HTTP_PORT, function () {
         console.log("Express http server listening on " + HTTP_PORT);
-
     });
 }).catch((err) => {
     console.log("unable to start server: "+ err);

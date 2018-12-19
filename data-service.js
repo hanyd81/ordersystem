@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const bcrypt= require("bcryptjs");
 
 const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
@@ -13,9 +14,9 @@ var mealSchema = new Schema({
     price: Number
 })
 var orderSchema = new Schema({
-    number: Number,
+    table: Number,
     time: { type: Date, default: Date.now },
-    meals: [{ name: String, picture: String, price: Number }],
+    meals: [{ name: String, picture: String, price: Number , serve : Number}],
     total: Number
 })
 
@@ -37,12 +38,63 @@ module.exports.initialize=function(){
             Orders=db.model('Orders',orderSchema);
             Users=db.model('Users',userSchema);
             userSchema.add({orders:[orderSchema]});
+
             resolve();
         });
 
     });
 };
+//-------------------user related-----------------
+module.exports.registerUser = function (userData) {
+    return new Promise((resolve, reject) => {
+        if (userData.password != userData.password2) {
+            reject("Passwords do not match");
+        } else {
+            bcrypt.genSalt(10, (err, salt) => {
+                if (err) { reject("There was an error encrypting the password");} 
+                else {
+                    bcrypt.hash(userData.password, salt, (err, hash) => {
+                        if (err) {reject("There was an error encrypting the password");} 
+                        else {
+                            let newUser = new Users({
+                                owner: false,
+                                number: userData.number,
+                                password: hash
+                            });
+                            newUser.save((err) => {
+                                if (err) {
+                                    if (err.code == 11000) {reject("User Name already taken");} 
+                                    else {reject("There was an error creating the user:" + err);}
+                                }
+                                else {resolve(); }
+                            });
+                        }
+                    })
+                }
+            }); 
+        }
+    });
+};
 
+module.exports.checkUser = function (userData) {
+    return new Promise((resolve, reject) => {
+        Users.find({ number: userData.number }).exec().then((users) => {
+            if (users.length == 0) { reject("Unable to find table: " + userData.number); }
+            else {
+                bcrypt.compare(userData.password, users[0].password).then((match) => {
+                    if (!match) { reject("Incorrect Password for table: " + userData.number); }
+                    else { resolve(users[0]); }
+                });
+            }
+        }).catch(() => {
+            reject("Unable to find table: " + userData.number);
+        })
+    });
+};
+
+
+
+//------------------meal CRUD-----------------------------
 module.exports.addmeal = function (newmeal) {
     let meal=new Meals(newmeal);
     return new Promise((resolve, reject) => {
@@ -118,4 +170,21 @@ module.exports.getMealById = function (myId) {
             reject(err);
         });
     })
+}
+
+//---------------------order CRUD---------------------
+module.exports.createOrder = function (tableNum) {
+    return new Promise((resolve, reject) => {
+        var order = new Orders({
+            table: tableNum,
+            total: 0,
+            meals: []
+        });
+        order.save((err) => {
+            if (err) { console.log(err); reject(); }
+            else
+                resolve();
+        })
+    });
+
 }

@@ -34,17 +34,16 @@
         <form class="navbar-form navbar-right">
           <div class="dropdown">
             <button class="btn btn-primary dropdown-toggle" type="button" id="userMenu" data-toggle="dropdown">
-              <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;{{session.user.userName}}&nbsp;&nbsp;<span
+              <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Table {{session.user.tableNumber}}&nbsp;&nbsp;<span
                   class="caret"></span>
             </button>
             <ul class="dropdown-menu" aria-labelledby="userMenu">
-              <li><a href="/userHistory">User History</a></li>
               <li><a href="/logout">Log Out</a></li>
             </ul>
           </div>
         </form>
         <ul class="nav navbar-nav navbar-right">
-          {{#navLink "/employees"}}My Order{{/navLink}}
+          {{#navLink "/tOrders"}}My Order{{/navLink}}
           {{#navLink "/checkout"}}Check out{{/navLink}}
         </ul>
         {{else}}
