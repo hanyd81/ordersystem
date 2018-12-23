@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const multer = require("multer");
 const exphbs = require("express-handlebars");
 const clientSessions = require("client-sessions");
+const date = require('date-and-time');
 app = express();
 //------------------- index start from 1-----------
 var Handlebars = require('handlebars');
@@ -29,12 +30,13 @@ const upload = multer({ storage: storage });
 app.use(express.static('./public'));
 
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
 app.use(clientSessions ({
     cookieName:"session",
     secret: "happywokisanicechinesefoodresrunt",
-    duration: 2*60*1000,
-    activeDuration: 1*60*1000
+    duration: 40*60*1000,
+    activeDuration: 20*60*1000
 }));
 
 app.use((req,res,next)=>{
@@ -141,6 +143,52 @@ app.get("/tableStart",(req,res)=>{
     res.render("tableStart");
 })
 
+app.get("/tMeals", (req, res) => {
+    dataService.getAllMeal().then((meals) => {
+        
+        if(!req.session.user){
+           // alert("Table session time out, please log in");
+            res.redirect("/");
+        }
+        if (req.session.user.order == "") {
+            dataService.createOrder(req.session.user.tableNumber).then((order) => {
+                req.session.user.order= order.id;
+                res.render("tMeals", { mealData: meals });
+            }).catch((err)=>{
+                console.log(err);
+                res.status(500).send("unable to create order");
+            });
+        } else
+            res.render("tMeals", { mealData: meals });
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("unable to get meals");
+    })
+});
+
+app.get("/tOrders",(req,res)=>{
+    dataService.getLatestOrder(req.session.user.tableNumber).then((theOrder)=>{
+        if(theOrder){
+           req.session.user.order=theOrder.id;
+        let orderTime = date.format(theOrder.time, 'YYYY-MM-DD  hh:mm A');
+        res.render("orders", { order: theOrder, time: orderTime });
+        }else
+        res.render("orders");
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("unable to get meals for order");
+    })
+})
+
+app.get("/orders/:orderId", (req, res) => {
+    dataService.getOrderById(req.session.user.order).then((order) => {
+        let orderTime = date.format(order.time, 'YYYY-MM-DD  hh:mm A')
+        res.render("orders", { order: order, time: orderTime })
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send("unable to get meals for order");
+    })
+})
 
 //-------------------POST route---------------------
 app.post("/register", (req, res) => {
@@ -155,7 +203,8 @@ app.post("/register", (req, res) => {
 app.post("/login",(req,res)=>{
     dataService.checkUser(req.body).then((user) => {
         req.session.user = {
-        tableNumber:user.number
+        tableNumber:user.number,
+        order:""
         }
         res.redirect('/tableStart');
         }).catch((err)=>{
@@ -199,6 +248,16 @@ app.post("/meal/update", (req,res)=>{
         console.log(err);
         res.status(500).send("Unable to process request");
     });
+})
+
+app.post("/api/order/:orderId",(req, res)=>{
+    //console.log(req.body);
+    dataService.addMealToOrder(req.session.user.order,req.body).then(()=>{
+res.send("meal added to the order");
+    }).catch((err)=>{
+        console.log(err);
+        res.send("cannot add meal");
+    })
 })
 
 

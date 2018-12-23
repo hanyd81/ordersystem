@@ -1,0 +1,52 @@
+<div class="row">
+    <h1> Table {{session.user.tableNumber}} &nbsp;&nbsp;<span id="orderTime">({{time}})</span></h1>
+</div>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Picture</th>
+            <th scope="col">Meal</th>
+            <th scope="col">Price</th>
+            <th scope="col">serve</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each order.meals}}
+        {{#if filled}}
+        <tr class="bg-success">
+            <th scope="row">{{inc @index }}</th>
+            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
+            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
+            <td>{{name}}</td>
+            <td>{{price}}</td>
+            <td>{{serve}}</td>
+            <td><span class="glyphicon glyphicon-ok"></span>
+            </td>
+        </tr>
+        {{else}}
+        <tr >
+            <th scope="row">{{inc @index }}</th>
+            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
+            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
+            <td>{{name}}</td>
+            <td>{{price}}</td>
+            <td>{{serve}}</td>
+            <td><button type="button" onclick="removeMeal('{{id}}')" class="btn btn-info">
+          remove</button></span>
+            </td>
+        </tr>
+        {{/if}}
+        {{else}}
+        <tr>
+            <td class="text-center" colspan="5"><strong font="2em">No Meal in Order</strong></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<div class="row">
+    <h3 class="text-center">Total : {{order.total}}</h3>
+    <a class="btn btn-danger btn-lg pull-right" href="/checkout" role="button" style="line-height: 60px">Check Out</a>
+</div>
+

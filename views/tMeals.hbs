@@ -1,6 +1,5 @@
-<div class="row">
-    <h1>All Meals</h1>
-</div>
+
+
 <table class="table table-hover table-sm">
   <thead>
     <tr>
@@ -8,7 +7,6 @@
       <th scope="col">Picture</th>
       <th scope="col">Meal</th>
       <th scope="col">Price</th> 
-      <th scope="col"></th> 
       <th scope="col"></th> 
     </tr>
   </thead>
@@ -18,11 +16,13 @@
       <th scope="row">{{inc @index }}</th>
       <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
       class="rounded img-thumbnail " style="max-width: 200px; height:auto" /></td>
-      <td>{{name}}</td>
-      <td>{{price}}</td>
-      <td><a href="meal/{{id}}" class="btn btn-info" ><span class="glyphicon glyphicon-pencil" ></span> &nbsp;&nbsp;Edit</a></td>
-      
-      <td><a href="meals/delete/{{id}}" class="btn btn-warning" >delete</a></td>
+      <td class="align-middle">{{name}}</td>
+      <td class="align-middle">{{price}}</td>
+      <td class="align-middle">
+        <input type="number" id="{{id}}" , name="serve" min="0" max="10">
+        <button type="button" onclick="takeOrder('{{name}}', '{{picture}}',{{price}},'{{id}}')" class="btn btn-success pull-right">
+          Add to order</button>
+      </td>
     </tr>
     {{else}}
     <tr>
