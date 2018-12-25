@@ -37,13 +37,17 @@ module.exports.initialize=function(){
             Meals=db.model('Meals',mealSchema);
             Orders=db.model('Orders',orderSchema);
             Users=db.model('Users',userSchema);
-            userSchema.add({orders:[orderSchema]});
-
+            userSchema.add({orders:[orderSchema]}); 
             resolve();
         });
-
+         //----------------add new owner---------------------
+        
     });
 };
+
+
+
+
 //-------------------user related-----------------
 module.exports.registerUser = function (userData) {
     return new Promise((resolve, reject) => {

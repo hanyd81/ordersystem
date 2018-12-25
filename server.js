@@ -143,6 +143,10 @@ app.get("/tableStart",(req,res)=>{
     res.render("tableStart");
 })
 
+app.get("/kitchenStart",(req,res)=>{
+    res.render("kitchenStart");
+})
+
 app.get("/tMeals", (req, res) => {
     dataService.getAllMeal().then((meals) => {
         
@@ -204,9 +208,15 @@ app.post("/login",(req,res)=>{
     dataService.checkUser(req.body).then((user) => {
         req.session.user = {
         tableNumber:user.number,
+        owner:user.owner,
         order:""
         }
-        res.redirect('/tableStart');
+        if(req.session.user.owner){
+            res.redirect("/kitchenStart");
+        }else{
+            res.redirect('/tableStart');
+        }
+        
         }).catch((err)=>{
             res.render("login", {errorMessage: err, tableNumber: req.body.number});
         });
