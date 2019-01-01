@@ -95,6 +95,10 @@ app.get("/login", (req,res)=>{
     res.render("login");
 })
 
+app.get("/Klogin", (req,res)=>{
+    res.render("login");
+})
+
 app.get("/register", (req,res)=>{
     res.render("register");
 })
@@ -194,6 +198,24 @@ app.get("/orders/:orderId", (req, res) => {
     })
 })
 
+app.get("/kOrders",(req,res)=>{
+    dataService.getActiveOrder().then((orders)=>{
+        res.render("kOrders",{orders:orders} );
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("unable to get orders");
+    });
+})
+
+app.get("/allOrders",(req,res)=>{
+    dataService.getAllOrder().then((orders)=>{
+        res.render("kOrders",{orders:orders} );
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("unable to get orders");
+    })
+})
+
 //-------------------POST route---------------------
 app.post("/register", (req, res) => {
 
@@ -260,16 +282,24 @@ app.post("/meal/update", (req,res)=>{
     });
 })
 
-app.post("/api/order/:orderId",(req, res)=>{
+app.post("/api/orders/:orderId",(req, res)=>{
     //console.log(req.body);
     dataService.addMealToOrder(req.session.user.order,req.body).then(()=>{
-res.send("meal added to the order");
+res.json("meal added to the order");
     }).catch((err)=>{
         console.log(err);
-        res.send("cannot add meal");
+        res.json("cannot add meal");
     })
 })
 
+app.put("/api/orders/:orderId",(req, res)=>{
+    dataService.fillMealInOrder(req.params.orderId, req.body.mealId).then(()=>{
+        res.json("meal filled");
+            }).catch((err)=>{
+                console.log(err);
+                res.json("cannot fill meal");
+            })
+})
 
 //------------------------- 404-----------------------
 app.use((req, res) => {

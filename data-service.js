@@ -16,8 +16,9 @@ var mealSchema = new Schema({
 var orderSchema = new Schema({
     table: Number,
     time: { type: Date, default: Date.now },
-    meals: [{ name: String, picture: String, price: Number , serve : Number, Filled:Boolean}],
-    total: Number
+    meals: [{ name: String, picture: String, price: Number , serve : Number, filled:Boolean}],
+    total: Number,
+    active: { type:Boolean, default: true }
 })
 
 var userSchema= new Schema({
@@ -209,7 +210,17 @@ module.exports.addMealToOrder = function (orderId, newMeal) {
     })
 }
 
-
+module.exports.fillMealInOrder = function (orderId,mealId){
+    return new Promise((resolve, reject) => {
+        Orders.updateOne({ _id: orderId , "meals._id": mealId},
+         { $set:{ "meals.$.filled": true}}   )
+         .exec().then(() => {
+            resolve("meal filled");
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+}
 
 module.exports.getOrderById= function(orderId){
     return new Promise((resolve,reject)=>{
@@ -221,17 +232,37 @@ module.exports.getOrderById= function(orderId){
     })
 }
 
+
+
 module.exports.getLatestOrder = function (tableNum) {
     let myOrders = [];
     return new Promise((resolve, reject) => {
         Orders.find({ table: tableNum }).exec().then((data) => {
             myOrders = data;
-           
                 resolve(myOrders[myOrders.length-1]);
-            
-            
+              
         }).catch((err) => {
             reject(err);
         })
+    });
+}
+
+module.exports.getAllOrder = function () {
+    return new Promise((resolve, reject) => {
+        Orders.find().exec().then((data) => {
+            resolve(data);
+        }).catch((err) => {
+            reject(err);
+        });
+    });
+}
+
+module.exports.getActiveOrder=function(){
+    return new Promise((resolve, reject) => {
+        Orders.find({active:true}).exec().then((orders) => {
+            resolve(orders);
+        }).catch((err) => {
+            reject(err);
+        });
     });
 }

@@ -15,7 +15,7 @@ function takeOrder(newName, newPicture, newPrice, id) {
        // mealsInOrder.push(meal);
         alert(newServe + " " + newName + " added to the order");
         
-        var myRequest = new Request('/api/order/:orderId', { 
+        var myRequest = new Request('/api/orders/:orderId', { 
             method: 'POST',
             body: JSON.stringify(meal),
             headers: {
@@ -32,6 +32,23 @@ function takeOrder(newName, newPicture, newPrice, id) {
     
 }
 
-function updateOrder(id){
+function fullFillMeal(orderId,mealId){
+let route='/api/orders/'+orderId;
+let btnId='#'+orderId+mealId;
+    var myRequest = new Request(route, { 
+        method: 'PUT',
+        body: JSON.stringify({mealId:mealId}),
+        headers: {
+            'Content-Type': 'application/json'
+        } 
+    });
+    fetch(myRequest).then(function(response) {
+         return response.json()
+      }).then(function(json){
+          console.log(json); 
+          $(btnId).removeClass("btn-danger");
+          $(btnId).addClass("btn-secondary");
+          
+      });
 
 }

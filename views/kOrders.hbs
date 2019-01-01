@@ -1,0 +1,45 @@
+{{#each orders}}
+
+<div class="row">
+    <h1> Table {{table}} &nbsp;&nbsp;</h1>
+</div>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">picture</th>
+            <th scope="col">Meal</th>
+            <th scope="col">serve</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each meals}}
+        {{#if filled}}
+        <tr >
+            <th scope="row">{{inc @index }}</th>
+            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
+            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
+            <td>{{name}}</td>
+            <td>{{serve}}</td>
+            <td><button class="btn btn-secondary" disabled>
+          &nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; filled &nbsp;&nbsp;
+            </button></td>
+        </tr>
+        {{else}}
+        <tr class="bg-info" >
+            <th scope="row">{{inc @index }}</th>
+            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
+            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
+            <td>{{name}}</td>
+            <td>{{serve}}</td>
+            <td><button type="button" onclick="fullFillMeal('{{../id}}', '{{id}}')" id="{{../id}}{{id}}" class="btn btn-danger">
+          Full Fill</button></span>
+            </td>
+        </tr>
+        {{/if}}
+        {{/each}}
+    </tbody>
+</table>
+
+{{/each}}
