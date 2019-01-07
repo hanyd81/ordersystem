@@ -33,8 +33,7 @@
             <td>{{name}}</td>
             <td>{{price}}</td>
             <td>{{serve}}</td>
-            <td><button type="button" onclick="removeMeal('{{id}}')" class="btn btn-info">
-          remove</button></span>
+            <td></span>
             </td>
         </tr>
         {{/if}}
@@ -47,6 +46,10 @@
 </table>
 <div class="row">
     <h3 class="text-center">Total : {{order.total}}</h3>
-    <a class="btn btn-danger btn-lg pull-right" href="/checkout" role="button" style="line-height: 60px">Check Out</a>
+  {{#if order.active}}  <a class="btn btn-danger btn-lg pull-right" href="/checkout/{{order.id}}" role="button" style="line-height: 40px">Check Out</a>
+  {{else}} 
+  <button class="btn btn-outline-success  btn-lg ">Order already checked out</button>
+  <a class="btn btn-danger  btn-lg pull-right " href="/tMeals" role="button" >Start New Order</a>
+  {{/if}}
 </div>
 

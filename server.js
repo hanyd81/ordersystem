@@ -1,3 +1,7 @@
+// order system
+//  heroku link    https://enigmatic-beach-81988.herokuapp.com
+
+
 const express=require ("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -198,6 +202,15 @@ app.get("/orders/:orderId", (req, res) => {
     })
 })
 
+app.get("/checkout/:orderId",(req,res)=>{
+    dataService.checkOutOrder(req.params.orderId).then((mesg)=>{
+        //console.log(mesg);
+        res.render("tableStart");
+    }).catch((err)=>{
+        console.log(err);
+        res.status(500).send("unable to check out order");
+    });
+})
 app.get("/kOrders",(req,res)=>{
     dataService.getActiveOrder().then((orders)=>{
         res.render("kOrders",{orders:orders} );

@@ -266,3 +266,15 @@ module.exports.getActiveOrder=function(){
         });
     });
 }
+
+module.exports.checkOutOrder = function (id) {
+    return new Promise((resolve, reject) => {
+        Orders.updateOne({ _id: id },
+            { $set: { active: false } })
+            .exec().then(() => {
+                resolve("order checked out");
+            }).catch((err) => {
+                reject(err);
+            })
+    });
+}
