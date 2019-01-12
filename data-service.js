@@ -6,8 +6,6 @@ const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 
 
-
-
 var mealSchema = new Schema({
     name: String,
     picture: String,
@@ -30,7 +28,8 @@ var Meals, Users, Orders; // to be defined on new connection (see initialize)
 
 module.exports.initialize=function(){
     return new Promise((resolve, reject)=>{
-        let db=mongoose.createConnection("mongodb://orderTable:tableOrder11@ds251819.mlab.com:51819/order_page", { useNewUrlParser: true });
+        //let db=mongoose.createConnection("mongodb://orderTable:tableOrder11@ds251819.mlab.com:51819/order_page", { useNewUrlParser: true });
+        let db=mongoose.createConnection("mongodb://yhan61:Myazure99\&@hanyd-shard-00-00-aehsf.mongodb.net:27017,hanyd-shard-00-01-aehsf.mongodb.net:27017,hanyd-shard-00-02-aehsf.mongodb.net:27017/Happy-wok?ssl=true&replicaSet=hanyd-shard-0&authSource=admin&retryWrites=true", { useNewUrlParser: true });
         db.on('err',(err)=>{
             reject(err);
         });
@@ -38,11 +37,34 @@ module.exports.initialize=function(){
             Meals=db.model('Meals',mealSchema);
             Orders=db.model('Orders',orderSchema);
             Users=db.model('Users',userSchema);
-            userSchema.add({orders:[orderSchema]}); 
+           // userSchema.add({orders:[orderSchema]}); 
+            /*//----------------add first owner---------------------
+         bcrypt.genSalt(10, (err, salt) => {
+            if (err) { console.log("There was an error encrypting the password");} 
+            else {
+                bcrypt.hash("123456", salt, (err, hash) => {
+                    if (err) {console.log("There was an error encrypting the password");} 
+                    else {
+                        let newUser = new Users({
+                            owner: true,
+                            number: 999,
+                            password: hash
+                        });
+                        newUser.save((err) => {
+                            if (err) {
+                                if (err.code == 11000) {console.log("User Name already taken");} 
+                                else {console.log("There was an error creating the user:" + err);}
+                            }
+                        });
+                    }
+                })
+            }
+        }); 
+//--------------------------------------------------------*/
             resolve();
         });
-         //----------------add new owner---------------------
         
+
     });
 };
 
