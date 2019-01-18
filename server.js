@@ -86,9 +86,6 @@ app.engine('.hbs', exphbs({
 app.set("view engine", '.hbs');
 
 
-
-
-
 //--------------GET---routes-----------------------
 
 app.get("/", (req,res)=>{
@@ -165,6 +162,7 @@ app.get("/tMeals", (req, res) => {
         if (req.session.user.order == "") {
             dataService.createOrder(req.session.user.tableNumber).then((order) => {
                 req.session.user.order= order.id;
+                if(theOrder.active){req.session.user.actOrder=true;}
                 res.render("tMeals", { mealData: meals });
             }).catch((err)=>{
                 console.log(err);
@@ -180,7 +178,9 @@ app.get("/tMeals", (req, res) => {
 
 app.get("/tOrders",(req,res)=>{
     dataService.getLatestOrder(req.session.user.tableNumber).then((theOrder)=>{
+
         if(theOrder){
+            if(theOrder.active){req.session.user.actOrder=true;}
            req.session.user.order=theOrder.id;
         let orderTime = date.format(theOrder.time, 'YYYY-MM-DD  hh:mm A');
         res.render("orders", { order: theOrder, time: orderTime });
@@ -205,6 +205,7 @@ app.get("/orders/:orderId", (req, res) => {
 app.get("/checkout/:orderId",(req,res)=>{
     dataService.checkOutOrder(req.params.orderId).then((mesg)=>{
         //console.log(mesg);
+        req.session.user.order="";
         res.render("tableStart");
     }).catch((err)=>{
         console.log(err);

@@ -31,6 +31,18 @@
                //alert(message);
                $(".modal-body p").text(message);
                $("#myModal").modal({});
+               /* add number beside My order btn---------------------
+               let orderbtn=$("#tableNav li:contains('My Order')");
+               orderbtn.css("color","red");
+               if(!orderbtn.data("meals")){
+                   console.log("no meals yet");
+                    orderbtn.data("meals",{no:1});}
+                    
+               let orderNum=parseInt(orderbtn.data("meals").no)+1;
+               console.log(orderNum);
+               let mealMesg="<span>"+orderNum+"</span>";
+               orderbtn.append(mealMesg);
+               //--------------------------------------*/
                 $(inputId).val(0);
             });
         }

@@ -20,8 +20,8 @@
       <td class="align-middle">{{price}}</td>
       <td class="align-middle">
         <input type="number" id="{{id}}" , name="serve" min="0" max="10">
-        <button type="button" onclick="takeOrder('{{name}}', '{{picture}}',{{price}},'{{id}}')" class="btn btn-success pull-right">
-          Add to order</button>
+      {{#if req.session.user.actOrder}}  <button type="button" onclick="takeOrder('{{name}}', '{{picture}}',{{price}},'{{id}}')" class="btn btn-success pull-right">
+          Add to order</button>{{/if}}
       </td>
     </tr>
     {{else}}
