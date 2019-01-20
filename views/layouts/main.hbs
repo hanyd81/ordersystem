@@ -43,10 +43,11 @@
             </ul>
           </div>
         </form>
+        {{#unless session.user.owner}}
         <ul class="nav navbar-nav navbar-right" id="tableNav">
           {{#navLink "/tMeals"}}Meals{{/navLink}}
           {{#navLink "/Orders/{{session.user.order}}"}}My Order{{/navLink}}
-          
+          {{/unless}}
         </ul>
         {{else}}
         <form class="navbar-form navbar-right">
