@@ -160,10 +160,12 @@ app.get("/tMeals", (req, res) => {
             res.redirect("/");
         }
         if (req.session.user.order == "") {
-            dataService.createOrder(req.session.user.tableNumber).then((order) => {
-                req.session.user.order= order.id;
-                if(theOrder.active){req.session.user.actOrder=true;}
-                res.render("tMeals", { mealData: meals });
+            dataService.createOrder(req.session.user.tableNumber).then((theOrder) => {
+                req.session.user.order= theOrder.id;
+                if(theOrder.active){req.session.user.actOrder=true; 
+                    console.log(req.session.user.actOrder);
+                }
+                res.render("tMeals", { mealData: meals, actOrder: true});
             }).catch((err)=>{
                 console.log(err);
                 res.status(500).send("unable to create order");
