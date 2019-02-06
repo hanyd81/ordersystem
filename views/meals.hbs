@@ -1,6 +1,10 @@
 <div class="row">
+     <a class="btn btn-info  btn-lg pull-left  " href="/kitchenStart" role="button" >Back</a>
+
     <a class="btn btn-success  btn-lg pull-right " href="/addmeal" role="button" >Add meals</a>
- <h1>All Meals</h1>
+</div>
+<div  class="row">
+<h1>All Meals</h1>
 </div>
 <table class="table table-hover table-sm">
   <thead>
@@ -18,7 +22,7 @@
     <tr>
       <th scope="row">{{inc @index }}</th>
       <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
-      class="rounded img-thumbnail " style="max-width: 200px; height:auto" /></td>
+      class="rounded img-thumbnail mealList"  /></td>
       <td>{{name}}</td>
       <td>{{price}}</td>
       <td><a href="meal/{{id}}" class="btn btn-info" ><span class="glyphicon glyphicon-pencil" ></span> &nbsp;&nbsp;Edit</a></td>

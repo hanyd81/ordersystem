@@ -223,7 +223,7 @@ app.get("/kOrders",(req,res)=>{
 
 app.get("/allOrders",(req,res)=>{
     dataService.getAllOrder().then((orders)=>{
-        res.render("kOrders",{orders:orders} );
+        res.render("kAllOrders",{orders:orders} );
     }).catch((err)=>{
         console.log(err);
         res.status(500).send("unable to get orders");

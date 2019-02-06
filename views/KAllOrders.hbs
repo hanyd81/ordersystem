@@ -1,7 +1,7 @@
 <div class="row">
      <a class="btn btn-info  btn-lg pull-left  " href="/kitchenStart" role="button" >Back</a>
 
-    <h1 style="text-align: center"> &nbsp; Current Orders</h1>
+    <h1 style="text-align: center"> &nbsp; All Orders</h1>
 </div>
 
 {{#each orders}}
@@ -13,7 +13,6 @@
     <thead>
         <tr>
             <th scope="col"></th>
-            <th scope="col">picture</th>
             <th scope="col">Meal</th>
             <th scope="col">serve</th>
             <th scope="col"></th>
@@ -24,23 +23,19 @@
         {{#if filled}}
         <tr >
             <th scope="row">{{inc @index }}</th>
-            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
-            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
             <td>{{name}}</td>
             <td>{{serve}}</td>
-            <td><button class="btn btn-secondary" disabled>
-          &nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; filled &nbsp;&nbsp;
+            <td><button class="btn btn-success" disabled>
+          &nbsp;&nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; servered &nbsp;&nbsp;
             </button></td>
         </tr>
         {{else}}
         <tr class="bg-info" >
             <th scope="row">{{inc @index }}</th>
-            <td><img src="/images/uploaded/{{picture}}" alt="{{name}}" 
-            class="rounded img-thumbnail " style="max-width: 100px; height:auto" /></td>
             <td>{{name}}</td>
             <td>{{serve}}</td>
-            <td><button type="button" onclick="fullFillMeal('{{../id}}', '{{id}}')" id="{{../id}}{{id}}" class="btn btn-danger">
-          Full Fill</button></span>
+            <td><button type="button"  class="btn btn-danger" disabled>
+          not servered</button></span>
             </td>
         </tr>
         {{/if}}
@@ -51,7 +46,7 @@
 {{/each}}
 <div class="row">
     <div class="col-md-12">
-<a class="btn btn-success  btn-lg pull-right " href="/kOrders" role="button" >Refresh</a>
+<a class="btn btn-success  btn-lg pull-right " href="#" role="button" >Refresh</a>
     </div>
 </div>
 <hr>

@@ -2,3 +2,9 @@
 #orderTime{
     color:gray;
 }
+
+.mealList{
+    max-height: 150px;
+    max-width: 150px;
+    object-fit: contain;
+}
