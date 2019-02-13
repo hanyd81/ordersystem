@@ -270,10 +270,13 @@ module.exports.getLatestOrder = function (tableNum) {
 }
 
 module.exports.getAllOrder = function () {
+   
     return new Promise((resolve, reject) => {
+        //console.log("call getAllOrder");
         Orders.find().exec().then((data) => {
             resolve(data);
         }).catch((err) => {
+            console.log(err);
             reject(err);
         });
     });

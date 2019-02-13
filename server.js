@@ -224,8 +224,9 @@ app.get("/kOrders",ensureLogin,(req,res)=>{
 })
 
 app.get("/allOrders",ensureLogin,(req,res)=>{
+    
     dataService.getAllOrder().then((orders)=>{
-        res.render("kAllOrders",{orders:orders} );
+        res.render("KAllOrders",{orders:orders} );
     }).catch((err)=>{
         console.log(err);
         res.status(500).send("unable to get orders"+ errhero);
