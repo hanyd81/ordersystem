@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+
+        <div class="row">
+            <div class="col-md-7 col-md-offset-4">
+                <h2 ><span  style="font-size: 0.8em" class="glyphicon glyphicon-triangle-right"></span>
+                &nbsp;&nbsp;Kitchen Log In</h2>
+            </div>
+        </div>
+        <hr>
+        {{#if errorMessage}}
+        <div class="alert alert-danger">
+            <strong>Error:</strong>{{errorMessage}}
+        </div>
+        {{/if}}
+        <form method="post" action="/login">
+            <div class="row">
+                <div class=" col-sm-10 ">
+                      <label>  Login Number: </label>
+                          <input class="form-control" id="number" name="number" type="number" placeholder="table number" min="1"
+                            required {{#if tableNumber}} value={{tableNumber}} {{/if}}/> 
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="form-group">
+                       <label>  Password: </label><input class="form-control" id="password" name="password" type="password" placeholder="Password"
+                            required />
+                        
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-primary " value="Login" />
+        </form>
+    </div>
+</div>

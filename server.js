@@ -50,7 +50,7 @@ app.use((req,res,next)=>{
 
 function ensureLogin(req,res,next){
     if (!req.session.user){
-        res.redirect("/login");
+        res.redirect("/");
     }else {
         next();
     }
@@ -97,7 +97,7 @@ app.get("/login", (req,res)=>{
 })
 
 app.get("/Klogin", (req,res)=>{
-    res.render("login");
+    res.render("kLogin");
 })
 
 app.get("/register", (req,res)=>{
@@ -109,7 +109,7 @@ app.get("/logout", (req,res)=>{
     res.redirect("/");
 })
 
-app.get("/meals", (req,res)=>{
+app.get("/meals", ensureLogin, (req,res)=>{
     dataService.getAllMeal().then((data)=>{
        res.render("meals",{mealData:data});  
     }).catch((err)=>{
@@ -118,11 +118,11 @@ app.get("/meals", (req,res)=>{
    
 })
 
-app.get("/addmeal",(req,res)=>{
+app.get("/addmeal",ensureLogin, (req,res)=>{
     res.render("addmeal");
 });
 
-app.get("/meals/delete/:name", (req,res)=>{
+app.get("/meals/delete/:name", ensureLogin, (req,res)=>{
     dataService.deleteMeal(req.params.name).then(()=>{
         res.redirect("/meals");
     }).catch((err)=>{
@@ -131,7 +131,7 @@ app.get("/meals/delete/:name", (req,res)=>{
     })
 })
 
-app.get("/meal/:mealId", (req, res) => {
+app.get("/meal/:mealId", ensureLogin,(req, res) => {
     dataService.getMealById(req.params.mealId).then((data) => {
         if(data){
             res.render("changemeal", { meal: data }); 
@@ -144,15 +144,15 @@ app.get("/meal/:mealId", (req, res) => {
     })
 });
 
-app.get("/tableStart",(req,res)=>{
+app.get("/tableStart",ensureLogin, (req,res)=>{
     res.render("tableStart");
 })
 
-app.get("/kitchenStart",(req,res)=>{
+app.get("/kitchenStart",ensureLogin,(req,res)=>{
     res.render("kitchenStart");
 })
 
-app.get("/tMeals", (req, res) => {
+app.get("/tMeals", ensureLogin,(req, res) => {
     dataService.getAllMeal().then((meals) => {
         
         if(!req.session.user){
@@ -178,7 +178,7 @@ app.get("/tMeals", (req, res) => {
     })
 });
 
-app.get("/tOrders",(req,res)=>{
+app.get("/tOrders",ensureLogin,(req,res)=>{
     dataService.getLatestOrder(req.session.user.tableNumber).then((theOrder)=>{
 
         if(theOrder){
@@ -194,7 +194,7 @@ app.get("/tOrders",(req,res)=>{
     })
 })
 
-app.get("/orders/:orderId", (req, res) => {
+app.get("/orders/:orderId",ensureLogin, (req, res) => {
     dataService.getOrderById(req.session.user.order).then((order) => {
         let orderTime = date.format(order.time, 'YYYY-MM-DD  hh:mm A')
         res.render("orders", { order: order, time: orderTime })
@@ -204,7 +204,7 @@ app.get("/orders/:orderId", (req, res) => {
     })
 })
 
-app.get("/checkout/:orderId",(req,res)=>{
+app.get("/checkout/:orderId",ensureLogin,(req,res)=>{
     dataService.checkOutOrder(req.params.orderId).then((mesg)=>{
         //console.log(mesg);
         req.session.user.order="";
@@ -214,7 +214,7 @@ app.get("/checkout/:orderId",(req,res)=>{
         res.status(500).send("unable to check out order");
     });
 })
-app.get("/kOrders",(req,res)=>{
+app.get("/kOrders",ensureLogin,(req,res)=>{
     dataService.getActiveOrder().then((orders)=>{
         res.render("kOrders",{orders:orders} );
     }).catch((err)=>{
@@ -223,12 +223,12 @@ app.get("/kOrders",(req,res)=>{
     });
 })
 
-app.get("/allOrders",(req,res)=>{
+app.get("/allOrders",ensureLogin,(req,res)=>{
     dataService.getAllOrder().then((orders)=>{
         res.render("kAllOrders",{orders:orders} );
     }).catch((err)=>{
         console.log(err);
-        res.status(500).send("unable to get orders");
+        res.status(500).send("unable to get orders"+ errhero);
     })
 })
 
