@@ -29,7 +29,7 @@ var Meals, Users, Orders; // to be defined on new connection (see initialize)
 module.exports.initialize=function(){
     return new Promise((resolve, reject)=>{
         //let db=mongoose.createConnection("mongodb://orderTable:tableOrder11@ds251819.mlab.com:51819/order_page", { useNewUrlParser: true });
-        let db=mongoose.createConnection("mongodb://yhan61:Myazure99\&@hanyd-shard-00-00-aehsf.mongodb.net:27017,hanyd-shard-00-01-aehsf.mongodb.net:27017,hanyd-shard-00-02-aehsf.mongodb.net:27017/Happy-wok?ssl=true&replicaSet=hanyd-shard-0&authSource=admin&retryWrites=true", { useNewUrlParser: true });
+        let db=mongoose.createConnection("mongodb+srv://hyd:K7sMNzcksSj2TCKi@cluster0.ob1vk.mongodb.net/orderhyd?retryWrites=true&w=majority", { useNewUrlParser: true });
         db.on('err',(err)=>{
             reject(err);
         });
