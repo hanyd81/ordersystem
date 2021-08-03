@@ -38,7 +38,7 @@ module.exports.initialize=function(){
             Orders=db.model('Orders',orderSchema);
             Users=db.model('Users',userSchema);
            // userSchema.add({orders:[orderSchema]}); 
-            //----------------add first owner---------------------
+          /*  //----------------add first owner---------------------
          bcrypt.genSalt(10, (err, salt) => {
             if (err) { console.log("There was an error encrypting the password");} 
             else {
@@ -60,7 +60,7 @@ module.exports.initialize=function(){
                 })
             }
         }); 
-//--------------------------------------------------------
+//--------------------------------------------------------*/
             resolve();
         });
         
